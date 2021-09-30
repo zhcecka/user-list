@@ -1,0 +1,8 @@
+{
+  "name": "user list",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "2b2bb516"
+}
