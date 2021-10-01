@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [text]="getBackButtonText()" defaultHref="/" *ngIf="!isEditMode"></ion-back-button>
+      <ion-button (click)="switchEditMode()" *ngIf="isEditMode">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="contact && !isEditMode && !isAddMode">
+      {{ contact.name }}
+    </ion-title>
+    <ion-title *ngIf="isAddMode">
+      Add contact
+    </ion-title>
+    <ion-title *ngIf="isEditMode">
+      Edit contact
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!isEditMode && !isAddMode" (click)="makeFavourite()">
+        <ion-icon name="star-outline" *ngIf="!contact?.favourite"></ion-icon>
+        <ion-icon name="star" *ngIf="contact?.favourite"></ion-icon>
+      </ion-button>
+      <ion-button (click)="switchEditMode()" *ngIf="!isEditMode && !isAddMode">Edit</ion-button>
+      <ion-button (click)="saveContact()" *ngIf="isEditMode || isAddMode" [disabled]="!contact?.name && !contact?.surname && !contact?.company">Save</ion-button>
+    </ion-buttons>
+</ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="contact" [hidden]="!isEditMode && !isAddMode">
+    <ion-item>
+      <ion-label position="stacked">Name</ion-label>
+      <ion-input [(ngModel)]="contact.name" onkeypress="return /[a-z]/i.test(event.key)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Surname</ion-label>
+      <ion-input [(ngModel)]="contact.surname"  onkeypress="return /[a-z]/i.test(event.key)"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Phone</ion-label>
+      <ion-input [(ngModel)]="contact.phone"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked" *ngIf="!isEmailNotValid">Email</ion-label>
+      <ion-label position="stacked" *ngIf="isEmailNotValid" color="danger">Email is not valid</ion-label>
+
+      <ion-input [(ngModel)]="contact.email" (ionInput)="input()"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Birthday</ion-label>
+      <ion-input [(ngModel)]="contact.birthday"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Company</ion-label>
+      <ion-input [(ngModel)]="contact.company"></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-card *ngIf="contact" [hidden]="isEditMode || isAddMode">
+    <ion-card-header>
+      <ion-card-subtitle>{{ contact.phone }}</ion-card-subtitle>
+      <ion-card-title>{{ contact.name }} {{ contact.surname }}</ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <p>{{ contact.birthday }}</p>
+      <p>{{ contact.company }}</p>
+      <p>{{ contact.email }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

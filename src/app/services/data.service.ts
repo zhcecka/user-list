@@ -1,83 +1,49 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-export interface Message {
-  fromName: string;
-  subject: string;
-  date: string;
-  id: number;
-  read: boolean;
+export interface Contact {
+  surname: string;
+  name: string;
+  birthday: string;
+  company: string;
+  email: string;
+  phone: string;
+  mask: string;
+  id?: number;
+  favourite?: boolean;
 }
 
+const CONTACTS_API = 'http://localhost:3000/api/contacts';
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  public messages: Message[] = [
-    {
-      fromName: 'Matt Chorsey',
-      subject: 'New event: Trip to Vegas',
-      date: '9:32 AM',
-      id: 0,
-      read: false
-    },
-    {
-      fromName: 'Lauren Ruthford',
-      subject: 'Long time no chat',
-      date: '6:12 AM',
-      id: 1,
-      read: false
-    },
-    {
-      fromName: 'Jordan Firth',
-      subject: 'Report Results',
-      date: '4:55 AM',
-      id: 2,
-      read: false
-    },
-    {
-      fromName: 'Bill Thomas',
-      subject: 'The situation',
-      date: 'Yesterday',
-      id: 3,
-      read: false
-    },
-    {
-      fromName: 'Joanne Pollan',
-      subject: 'Updated invitation: Swim lessons',
-      date: 'Yesterday',
-      id: 4,
-      read: false
-    },
-    {
-      fromName: 'Andrea Cornerston',
-      subject: 'Last minute ask',
-      date: 'Yesterday',
-      id: 5,
-      read: false
-    },
-    {
-      fromName: 'Moe Chamont',
-      subject: 'Family Calendar - Version 1',
-      date: 'Last Week',
-      id: 6,
-      read: false
-    },
-    {
-      fromName: 'Kelly Richardson',
-      subject: 'Placeholder Headhots',
-      date: 'Last Week',
-      id: 7,
-      read: false
-    }
-  ];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  public getMessages(): Message[] {
-    return this.messages;
+  public getContacts(searchString?: string): Observable<Contact[]> {
+    const options = searchString ? {
+      params: {
+        search: searchString
+      }
+    } : {};
+    return this.http.get<Contact[]>(CONTACTS_API, options);
   }
 
-  public getMessageById(id: number): Message {
-    return this.messages[id];
+  public addContact(contact: Contact): Observable<Contact[]> {
+    return this.http.post<Contact[]>(CONTACTS_API, contact);
+  }
+
+  public editContact(contact): Observable<Contact[]> {
+    return this.http.put<Contact[]>(CONTACTS_API, contact);
+  }
+
+  public deleteContact(contact): Observable<Contact[]> {
+    return this.http.delete<Contact[]>(`${CONTACTS_API}/${contact.id}`);
+  }
+
+  public getContactById(id: number): Observable<Contact> {
+    return this.http.get<Contact>(`${CONTACTS_API}/${id}`);
   }
 }
