@@ -24,11 +24,10 @@ export class ContactsListPage {
     this.favouriteContacts = this.contacts.pipe(map((data) => data.filter((contact) => contact.favourite)));
   }
 
-  // refresh(ev) {
-  //   setTimeout(() => {
-  //     ev.detail.complete();
-  //   }, 3000);
-  // }
+  refresh(ev) {
+    this.contacts = this.data.getContacts();
+    ev.detail.complete();
+  }
 
   search(event: CustomEvent) {
     const searchString = event.detail.value;
